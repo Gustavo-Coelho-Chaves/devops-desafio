@@ -1,3 +1,5 @@
+version: "3.8" 
+
 services:
   web:
     build: services/frontend
@@ -6,6 +8,7 @@ services:
     networks:
       - frontend
       - backend
+
   reader:
     build: services/reader
     ports:
@@ -13,6 +16,7 @@ services:
     networks:
       - frontend
       - backend
+
   writer:
     build: 
       context: ./services/writer
@@ -21,11 +25,16 @@ services:
       - "8081:8081"
     networks:
       - backend
+    depends_on:
+      - redis 
+
   redis:
     image: "redis:alpine"
     container_name: redis
     ports:
-      - "6379:6379"    
+      - "6379:6379"
+    volumes:
+      - redis-data:/data  
     networks:
       - backend
 
@@ -35,3 +44,6 @@ networks:
   backend:
     driver: bridge
 
+volumes:
+  redis-data:  
+    driver: local

@@ -37,9 +37,9 @@ func main() {
 			Addr: redis_host + ":" + redis_port,
 		})
 
-		key, err := client.Get(ctx, "SHAREDKEY").Result()
+		key, err := client.Get(ctx, "mensagem").Result()
 		if err == redis.Nil {
-			fmt.Println("Chave não encontrada no Redis.")
+			fmt.Println("Chave 'mensagem' não encontrada no Redis.")
 			http.Error(writer, "Key not found", http.StatusNotFound)
 			return
 		} else if err != nil {
@@ -48,7 +48,7 @@ func main() {
 			return
 		}
 
-		fmt.Printf("Chave encontrada: %s\n", key)
+		fmt.Printf("Chave 'mensagem' encontrada: %s\n", key)
 		fmt.Fprintf(writer, key)
 	})
 

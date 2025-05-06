@@ -63,5 +63,20 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
 
 handler_object = RequestHandler
 socketserver.TCPServer.allow_reuse_address = True
+try:
+    redishost = "redis"
+    redisclient = redis.Redis(host=redishost, port=6379)
+
+    print("Tentando conectar ao Redis para gravar chave inicial...")
+    redisclient.ping()
+
+    redisclient.set("mensagem", "Olá, DevOps!")
+    print('Chave "mensagem" registrada com sucesso no Redis.')
+
+except redis.ConnectionError as e:
+    print(f"Erro de conexão com o Redis ao iniciar: {e}")
+except redis.RedisError as e:
+    print(f"Erro ao gravar chave inicial no Redis: {e}")
+
 server = socketserver.TCPServer(("", 8081), handler_object)
 server.serve_forever()
